@@ -11,7 +11,9 @@ if (!lastfmapikey) throw new Error("expected LASTFM_APIKEY env")
 
 const pubkey = nostr.getPublicKey(privkey)
 const damus = "wss://relay.damus.io"
-const relays = [damus]
+const nos = "wss://nos.lol"
+const eden = "wss://eden.nostr.land"
+const relays = [damus, nos, eden]
 
 const pool = RelayPool(relays)
 
@@ -31,9 +33,14 @@ async function fetch_playing()
 		}
 
 		const content = `${mostRecent.name} - ${mostRecent.artist['#text']}`
+		if (last_playing === content) {
+			console.log(`still playing '${content}'`)
+			return
+		}
+		last_playing = content
 	
 		const kind = 30315;
-		const expiration = Math.floor((new Date().getTime() + (update_rate*2)) / 1000)
+		const expiration = Math.floor((new Date().getTime() + 60000*5) / 1000)
 		const created_at = Math.floor(new Date().getTime() / 1000)
 		const tags = [
 			['d', 'music'],
@@ -44,7 +51,8 @@ async function fetch_playing()
 		songEv.id = await nostr.calculateId(songEv)
 		songEv.sig = await nostr.signId(privkey, songEv.id)
 		// get current time, add 30 seconds, and convert it to UNIX timestamp
-		console.log(`playing ${mostRecent.name} - ${mostRecent.artist['#text']}`)
+		console.log(`sending ${mostRecent.name} - ${mostRecent.artist['#text']}`)
+		console.log(songEv)
 
 		pool.send(["EVENT", songEv])
 	} catch (e) {
