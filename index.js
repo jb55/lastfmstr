@@ -45,7 +45,7 @@ async function fetch_playing()
 		const tags = [
 			['d', 'music'],
 			['expiration', `${expiration}`],
-			['r', 'spotify:search:' + encodeURIComponent(`${mostRecent.name} ${mostRecent.artist['#text']}`)]
+			['r', mostRecent.url]
 		]
 		const songEv = {kind, content, tags, pubkey, created_at}
 		songEv.id = await nostr.calculateId(songEv)
