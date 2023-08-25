@@ -1,14 +1,9 @@
 {
   "name": "nspotify",
-  "private": true,
   "version": "1.0.0",
-  "main": "index.mjs",
-  "scripts": {
-    "start": "node .",
-    "dev": "DEBUG='ndk:*' node ."
-  },
+  "main": "index.js",
+  "scripts": { "start": "node index.js" },
   "dependencies": {
-    "@nostr-dev-kit/ndk": "^0.8.21",
-    "dotenv": "^16.3.1"
+    "nostr": "0.2.8"
   }
 }
